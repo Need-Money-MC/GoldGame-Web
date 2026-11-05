@@ -1,0 +1,326 @@
+/* =========================================================
+   GoldGame v2 — منوی کشویی، صفحه پشتیبانی، انیمیشن‌ها،
+   استایل ثبت‌نام/حساب/قوانین
+   ========================================================= */
+:root{--ease:cubic-bezier(.2,.7,.2,1)}
+::selection{background:var(--gold);color:#171300}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+img{max-width:100%}
+.hidden{display:none!important}
+[hidden]{display:none!important}
+
+/* ---------- نوار بالا ---------- */
+.topbar{position:relative;z-index:5}
+nav a{position:relative}
+nav a::after{content:'';position:absolute;inset-inline:0;bottom:-7px;height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .35s var(--ease)}
+nav a:hover::after,nav a.active::after{transform:scaleX(1)}
+.drawer-links a::after{display:none}
+.nav-cta{transition:transform .2s,box-shadow .25s,background .2s}
+.nav-cta:hover{transform:translateY(-2px);background:var(--gold2);box-shadow:0 8px 24px #f5c40040}
+.brand img{transition:transform .5s var(--ease)}
+.brand:hover img{transform:rotate(-8deg) scale(1.08)}
+
+.menu-btn{display:none;width:44px;height:44px;padding:0;place-items:center;border-radius:12px;border:1px solid var(--line);background:#ffffff08;color:#fff;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.menu-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.menu-btn path{transition:transform .3s var(--ease);transform-origin:center;transform-box:fill-box}
+.menu-btn:hover{border-color:var(--gold);color:var(--gold);background:#f5c4000d}
+.menu-btn:hover path:nth-child(1){transform:translateX(3px)}
+.menu-btn:hover path:nth-child(3){transform:translateX(-3px)}
+@media(max-width:980px){
+  .topbar{justify-content:space-between;gap:14px}
+  .topbar nav,.nav-cta{display:none}
+  .menu-btn{display:grid;order:0}
+}
+
+/* ---------- منوی کشویی (سمت چپ) ---------- */
+body.drawer-open{overflow:hidden}
+.drawer-overlay{position:fixed;inset:0;background:rgba(2,4,6,.66);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s linear .35s;z-index:90}
+body.drawer-open .drawer-overlay{opacity:1;visibility:visible;transition-delay:0s}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(86vw,340px);z-index:100;display:flex;flex-direction:column;gap:6px;padding:18px 16px 20px;overflow-y:auto;background:linear-gradient(170deg,#141a1e,#080b0e 72%);border-right:1px solid #f5c40045;box-shadow:30px 0 80px #000b;transform:translateX(-104%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s linear .45s;outline:none}
+body.drawer-open .drawer{transform:none;visibility:visible;transition-delay:0s}
+.drawer::before{content:'';position:absolute;inset:0 0 auto 0;height:180px;background:radial-gradient(circle at 20% 0,#f5c40022,transparent 70%);pointer-events:none}
+.drawer-head{position:relative;display:flex;align-items:center;justify-content:space-between;padding:2px 4px 16px;margin-bottom:6px;border-bottom:1px solid #ffffff12}
+.drawer-close{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:#ffffff08;color:#fff;font-size:24px;line-height:1;cursor:pointer;transition:transform .35s var(--ease),border-color .2s,color .2s}
+.drawer-close:hover{transform:rotate(90deg);border-color:var(--gold);color:var(--gold)}
+.drawer-links{position:relative;display:grid;gap:6px;margin-top:6px}
+.drawer-links a{display:flex;align-items:center;gap:13px;padding:11px 12px;border-radius:13px;border:1px solid transparent;color:#d6dbde;font-size:14px;opacity:0;transform:translateX(-18px);transition:opacity .4s,transform .45s var(--ease),background .2s,border-color .2s,color .2s}
+body.drawer-open .drawer-links a{opacity:1;transform:none;transition-delay:calc(var(--i,0)*55ms + 140ms),calc(var(--i,0)*55ms + 140ms),0s,0s,0s}
+.drawer-links a:hover{background:#ffffff0a;border-color:#ffffff14;color:#fff}
+.drawer-links a.active{background:linear-gradient(90deg,#f5c40022,#f5c4000a);border-color:#f5c40055;color:var(--gold2)}
+.drawer-links .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#ffffff0a;border:1px solid #ffffff12;flex:none;transition:background .25s,transform .3s var(--ease)}
+.drawer-links a.active .ico,.drawer-links a:hover .ico{background:#f5c4001c;border-color:#f5c40055}
+.drawer-links a:hover .ico{transform:scale(1.08) rotate(-5deg)}
+.drawer-links svg{width:19px;height:19px;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.drawer-links .chev{margin-right:auto;color:#6d767c;font-size:18px;transition:transform .25s,color .25s}
+.drawer-links a:hover .chev{transform:translateX(-4px);color:var(--gold)}
+.drawer-foot{position:relative;margin-top:auto;padding-top:16px;display:grid;gap:10px}
+.drawer-ip{display:flex;align-items:center;gap:12px;width:100%;text-align:right;padding:12px 14px;border-radius:13px;border:1px solid #f5c40045;background:#f5c4000d;color:#fff;cursor:pointer;transition:background .2s,border-color .2s}
+.drawer-ip:hover{background:#f5c40018;border-color:#f5c40088}
+.drawer-ip div{display:flex;flex-direction:column;line-height:1.5}
+.drawer-ip small{font-size:10px;color:#9da6ac}
+.drawer-ip strong{font:700 14px Arial,sans-serif;direction:ltr;text-align:right}
+.drawer-ip em{margin-right:auto;font-style:normal;font-size:11px;color:#15130a;background:var(--gold);padding:4px 9px;border-radius:7px;font-weight:800}
+.drawer-ip.copied em{background:#62e69b}
+
+/* ---------- دکمهٔ شناور پشتیبانی (هدست) ---------- */
+.support-fab{position:fixed;overflow:visible;text-decoration:none}
+.support-fab::before,.support-fab::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--orange);opacity:0;pointer-events:none}
+.support-fab .fab-label{position:absolute;right:calc(100% + 12px);top:50%;transform:translate(10px,-50%);opacity:0;white-space:nowrap;background:#14191c;border:1px solid #ff9d1980;color:#ffd18b;border-radius:10px;padding:7px 13px;font-size:12px;font-weight:800;pointer-events:none;transition:opacity .3s,transform .35s var(--ease)}
+.support-fab:hover .fab-label,.support-fab:focus-visible .fab-label,.support-fab.hint .fab-label{opacity:1;transform:translate(0,-50%)}
+.support-fab .fab-dot{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#62e69b;border:2px solid #14191c;box-shadow:0 0 10px #62e69b}
+.support-fab svg{transform-origin:50% 62%}
+@media(prefers-reduced-motion:no-preference){
+  .support-fab::before{animation:ripple 2.8s ease-out infinite}
+  .support-fab::after{animation:ripple 2.8s ease-out 1.4s infinite}
+  .support-fab svg{animation:ring 7s ease-in-out 2s infinite}
+  .support-fab .fab-dot{animation:blink 2s ease-in-out infinite}
+  .support-fab{animation:fabIn .8s var(--ease) .6s both}
+}
+@keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.95);opacity:0}}
+@keyframes ring{0%,84%,100%{transform:rotate(0)}86%{transform:rotate(-14deg)}88%{transform:rotate(12deg)}90%{transform:rotate(-10deg)}92%{transform:rotate(8deg)}94%{transform:rotate(-4deg)}96%{transform:rotate(2deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes fabIn{from{opacity:0;scale:.4}to{opacity:1;scale:1}}
+
+/* ---------- انیمیشن‌های صفحه ---------- */
+.sparks{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
+.spark{position:absolute;bottom:-14px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fff0a2,#f5c400 55%,transparent 72%);opacity:0;animation:sparkUp var(--t) linear var(--dl) infinite;will-change:transform,opacity}
+@keyframes sparkUp{0%{transform:translate3d(0,0,0);opacity:0}10%{opacity:.6}90%{opacity:.3}100%{transform:translate3d(var(--dx),-108vh,0);opacity:0}}
+
+@media(prefers-reduced-motion:no-preference){
+  .hero-copy>*,.page-hero>*{animation:rise .9s var(--ease) both}
+  .hero-copy>*:nth-child(1),.page-hero>*:nth-child(1){animation-delay:.05s}
+  .hero-copy>*:nth-child(2),.page-hero>*:nth-child(2){animation-delay:.16s}
+  .hero-copy>*:nth-child(3),.page-hero>*:nth-child(3){animation-delay:.27s}
+  .hero-copy>*:nth-child(4),.page-hero>*:nth-child(4){animation-delay:.38s}
+  .hero-copy>*:nth-child(5),.page-hero>*:nth-child(5){animation-delay:.49s}
+  .hero-art{animation:artIn 1.3s ease .25s both}
+  .gold-emblem{position:relative;overflow:hidden;animation:emblemFloat 7s ease-in-out infinite}
+  .gold-emblem::after{content:'';position:absolute;inset:-30% -60%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.55) 50%,transparent 58%);transform:translateX(-80%);animation:shine 5.5s ease-in-out 1.2s infinite}
+  .orbit-one{animation:spinA 30s linear infinite}
+  .orbit-two{animation:spinB 44s linear infinite}
+  .card-a{animation:bob 5s ease-in-out infinite}
+  .card-b{animation:bob 6s ease-in-out -2s infinite}
+  h1 .gold,h2 .gold{background:linear-gradient(90deg,#f5c400,#fff2a4,#f5c400,#ffdc45,#f5c400);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:goldflow 6s linear infinite}
+  .server-address .pulse{animation:pulseDot 2s ease-out infinite}
+  .rank-card.featured{animation:glowPulse 3.6s ease-in-out infinite}
+  .launcher-symbol{animation:emblemSoft 6s ease-in-out infinite}
+  .launcher-symbol i{animation:twinkle 2.4s ease-in-out infinite}
+  .join-banner::before{animation:sheen 7s ease-in-out infinite}
+}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes artIn{from{opacity:0}to{opacity:1}}
+@keyframes emblemFloat{0%,100%{transform:rotate(-8deg) translateY(0)}50%{transform:rotate(-3deg) translateY(-14px)}}
+@keyframes emblemSoft{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(2deg) translateY(-8px)}}
+@keyframes shine{0%,55%{transform:translateX(-80%)}100%{transform:translateX(80%)}}
+@keyframes spinA{from{transform:rotate(-25deg) scaleY(.5)}to{transform:rotate(335deg) scaleY(.5)}}
+@keyframes spinB{from{transform:rotate(38deg) scaleY(.38)}to{transform:rotate(-322deg) scaleY(.38)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes goldflow{to{background-position:250% 0}}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 #62e69b99}100%{box-shadow:0 0 0 12px #62e69b00}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 #f5c40000,0 0 28px #f5c40010}50%{box-shadow:0 0 0 1px #f5c40045,0 0 50px #f5c40030}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(1.35) rotate(25deg);opacity:.7}}
+@keyframes sheen{0%,60%{transform:translateX(120%)}100%{transform:translateX(-120%)}}
+
+/* ظاهر شدن هنگام اسکرول */
+.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* درخشش دنبال‌کنندهٔ موس روی کارت‌ها */
+.mode-card,.rank-card,.support-card,.rule{position:relative;isolation:isolate}
+.mode-card::before,.rank-card::before,.support-card::before,.rule::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(245,196,0,.15),transparent 70%);opacity:0;transition:opacity .3s}
+.mode-card:hover::before,.rank-card:hover::before,.support-card:hover::before,.rule:hover::before{opacity:1}
+.mode-arrow{transition:transform .3s var(--ease)}
+.mode-card:hover .mode-arrow{transform:translate(-6px,4px)}
+.mode-icon{transition:transform .4s var(--ease),background .3s}
+.mode-card:hover .mode-icon{transform:rotate(-8deg) scale(1.1);background:#f5c40030}
+.rank-logo{transition:transform .45s var(--ease)}
+.rank-card:hover .rank-logo{transform:translateY(-5px) rotate(-6deg) scale(1.07)}
+
+/* دکمه‌ها */
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn.primary::after{content:'';position:absolute;top:0;bottom:0;width:55%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .7s var(--ease);pointer-events:none}
+.btn.primary:hover::after{left:130%}
+.btn:active{transform:scale(.97)}
+.btn span{display:inline-block;transition:transform .25s var(--ease)}
+.btn:hover span{transform:translateX(-4px)}
+.btn.copied{background:#62e69b!important;color:#07210f!important}
+.join-banner{position:relative;overflow:hidden}
+.join-banner::before{content:'';position:absolute;inset:0;width:60%;background:linear-gradient(100deg,transparent,#f5c4001c,transparent);transform:translateX(120%);pointer-events:none}
+.join-banner>*{position:relative}
+
+/* ---------- نوار پشتیبانی صفحهٔ اصلی ---------- */
+.support-strip{max-width:1168px;margin:30px auto 0;padding:26px 32px;display:flex;align-items:center;gap:22px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(105deg,#ff9d1912,#111619e8)}
+.support-strip h2{font-size:22px;margin:0 0 2px}
+.support-strip p{margin:0;font-size:13px;color:#c1c6ca}
+.support-strip .btn{margin-right:auto;white-space:nowrap}
+.strip-icon{width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--orange);border:2px solid #ffd18b;box-shadow:0 6px 24px #ff9d1950}
+.strip-icon svg{width:27px;height:27px;fill:none;stroke:#211304;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:850px){.support-strip{margin-inline:20px}}
+@media(max-width:650px){.support-strip{flex-direction:column;align-items:flex-start;padding:24px}.support-strip .btn{margin:0;width:100%}}
+
+/* ---------- صفحهٔ پشتیبانی ---------- */
+.rank-banner{display:flex;align-items:center;gap:14px;max-width:640px;margin:0 auto 26px;padding:14px 18px;border:1px solid #f5c40070;border-radius:14px;background:linear-gradient(100deg,#f5c40020,#0d1215e8);font-size:13px;color:#ffe77a;text-align:right}
+.rank-banner b{color:#fff}
+.rank-banner .rb-ico{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#171300;font-weight:900}
+@media(prefers-reduced-motion:no-preference){.rank-banner{animation:rise .8s var(--ease) both,glowPulse 3s ease-in-out 1s 3}}
+.support-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.support-card{--brand:#f5c400;display:flex;flex-direction:column;gap:16px;padding:26px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(145deg,#141a1de8,#090d10ed);overflow:hidden;transition:transform .3s var(--ease),border-color .3s,box-shadow .3s}
+.support-card:hover{transform:translateY(-5px);border-color:var(--brand);box-shadow:0 22px 50px -24px var(--brand)}
+.support-card::after{content:'';position:absolute;width:190px;height:190px;border-radius:50%;left:-70px;top:-80px;background:radial-gradient(circle,var(--brand),transparent 68%);opacity:.12;pointer-events:none;transition:opacity .3s,transform .6s var(--ease)}
+.support-card:hover::after{opacity:.24;transform:scale(1.25)}
+.sc-head{display:flex;align-items:center;gap:16px}
+.sc-icon{width:64px;height:64px;border-radius:19px;display:grid;place-items:center;flex:none;box-shadow:0 10px 26px -10px var(--brand);transition:transform .45s var(--ease)}
+.sc-icon svg{width:38px;height:38px}
+.support-card:hover .sc-icon{transform:rotate(-7deg) scale(1.08)}
+.sc-head h2{font-size:22px;margin:0;line-height:1.4}
+.sc-head small{display:block;font-size:12px;color:#9da6ac}
+.sc-handle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:11px;border:1px dashed #ffffff30;background:#ffffff08}
+.sc-handle strong{font:700 15px Arial,sans-serif;direction:ltr;unicode-bidi:isolate}
+.sc-handle button{border:0;border-radius:8px;padding:6px 11px;font-size:11px;font-weight:800;cursor:pointer;color:#15130a;background:var(--gold);transition:background .2s,transform .2s}
+.sc-handle button:hover{background:var(--gold2)}
+.sc-handle button.copied{background:#62e69b}
+.support-card .btn{width:100%;background:var(--brand);color:#fff;border-color:transparent}
+.support-card .btn.primary:hover{background:var(--brand);filter:brightness(1.12)}
+.support-card.soon{border-style:dashed}
+.support-card.soon .sc-icon{filter:grayscale(.55);opacity:.85}
+.soon-pill{display:inline-block;font-size:11px;font-weight:800;color:#c9b6ff;border:1px solid #5865f280;background:#5865f21a;border-radius:999px;padding:3px 11px}
+.btn[aria-disabled=true]{opacity:.55;cursor:not-allowed;pointer-events:none}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+.step{display:flex;gap:14px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d1215e8}
+.step>b{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:800 15px Arial,sans-serif;color:#171200;background:var(--gold)}
+.step h3{font-size:14px;margin:0 0 3px}
+.step p{font-size:12px;color:#b8c0c5;margin:0;line-height:1.9}
+.steps-title{text-align:center;margin:50px 0 0;font-size:22px}
+@media(max-width:850px){.steps{grid-template-columns:1fr}}
+@media(max-width:700px){.support-grid{grid-template-columns:1fr}.support-card{padding:22px}}
+
+/* ---------- فروشگاه: پنجرهٔ خرید ---------- */
+.buy-dialog input#playerName{direction:ltr;text-align:left;transition:border-color .2s,box-shadow .2s}
+.buy-dialog input.ok{border-color:#62e69b}
+.buy-dialog input.bad{border-color:#ff6b57;box-shadow:0 0 0 3px #ff6b5722}
+.buy-dialog input.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.buy-dialog[open]{animation:dialogIn .4s var(--ease)}
+.buy-dialog[open]::backdrop{animation:fadeIn .3s}
+@keyframes dialogIn{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.field-error{color:#ff9a88!important;font-size:12px;line-height:1.9;margin:-2px 0 12px;font-weight:700}
+.dialog-fail{border:1px solid #ff6b5760;background:#ff6b5712;border-radius:13px;padding:16px;margin-bottom:12px}
+.dialog-fail strong{display:block;color:#ffb3a6;font-size:14px;margin-bottom:5px}
+.dialog-fail p{margin:0 0 12px;font-size:12px;color:#d9dfe3;line-height:2}
+.dialog-fail .btn{margin-bottom:0}
+
+/* ---------- قوانین ---------- */
+.rules-body{display:grid;gap:34px}
+.rule-group{scroll-margin-top:20px}
+.rule-group>header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.g-ico{width:44px;height:44px;border-radius:13px;flex:none;display:grid;place-items:center;background:#f5c40018;border:1px solid #f5c40050}
+.g-ico svg{width:22px;height:22px;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rule-group h2{font-size:21px;margin:0}
+.rule-group header p{margin:0;font-size:12px;color:#9da6ac}
+.rules-side .side-links{display:grid;gap:4px;margin:14px 0 16px}
+.rules-side .side-links a{display:block;padding:7px 11px;border-radius:9px;border:1px solid transparent;font-size:12px;color:#b8c0c5;transition:background .2s,color .2s,border-color .2s}
+.rules-side .side-links a:hover,.rules-side .side-links a.on{background:#f5c40014;border-color:#f5c40040;color:var(--gold2)}
+.rules-side .side-cta{display:block;text-align:center;padding:10px;border-radius:10px;background:var(--gold);color:#171200;font-weight:800;font-size:12px;transition:background .2s,transform .2s}
+.rules-side .side-cta:hover{background:var(--gold2);transform:translateY(-2px)}
+.rule em{font-style:normal;color:var(--gold2)}
+.rules-end{margin-top:34px;padding:18px 22px;border:1px dashed #f5c40060;border-radius:13px;background:#f5c4000a;font-size:12px;color:#d9dfe3;line-height:2}
+
+/* ---------- ورود / ثبت‌نام / حساب ---------- */
+.auth-wrap,.account-wrap{min-height:72vh;display:grid;place-items:center;padding:48px 18px}
+.auth-card,.account-card{width:min(100%,540px);padding:clamp(22px,5vw,36px);border:1px solid rgba(245,196,0,.35);border-radius:24px;background:rgba(15,15,15,.88);box-shadow:0 20px 80px #0008;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.auth-card h1,.account-card h1{margin:8px 0;font-size:clamp(26px,5vw,36px)}
+.auth-card>p,.account-card>p{color:#c6c6c6;line-height:1.9;font-size:14px}
+.db-status{display:inline-flex;align-items:center;gap:8px;font-size:11px;border-radius:999px;padding:5px 11px;border:1px solid #ffffff22;color:#aeb5ba;margin-right:10px;vertical-align:middle}
+.db-status i{width:8px;height:8px;border-radius:50%;background:#888}
+.db-status.ok{color:#9ef0c0;border-color:#62e69b55}.db-status.ok i{background:#62e69b;box-shadow:0 0 10px #62e69b}
+.db-status.bad{color:#ffb3a6;border-color:#ff6b5755}.db-status.bad i{background:#ff6b57}
+.db-status.wait i{animation:blink 1s infinite}
+.auth-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:22px 0 8px;padding:5px;border-radius:14px;background:#ffffff0a;border:1px solid #ffffff12}
+.auth-tabs button{position:relative;z-index:1;border:0;border-radius:10px;padding:12px;font:inherit;font-weight:800;cursor:pointer;background:transparent;color:#cfd4d7;transition:color .3s}
+.auth-tabs button.active{color:#171300}
+.auth-tabs .pill{position:absolute;z-index:0;top:5px;bottom:5px;right:5px;width:calc(50% - 8px);border-radius:10px;background:var(--gold);transition:transform .4s var(--ease)}
+.auth-tabs[data-mode=signup] .pill{transform:translateX(calc(-100% - 6px))}
+.auth-form .field{margin-top:14px}
+.auth-form label{display:block;margin:0 0 7px;color:#eee;font-size:13px}
+.auth-form input:not([type=checkbox]){width:100%;padding:14px;border:1px solid #555;border-radius:12px;background:#181818;color:#fff;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+.auth-form input:not([type=checkbox]):focus{border-color:var(--gold);box-shadow:0 0 0 3px #f5c40022}
+.auth-form input.ltr{direction:ltr;text-align:left}
+.auth-form input.bad{border-color:#ff6b57}
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:48px!important}
+.pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:9px;background:transparent;color:#9da6ac;cursor:pointer;display:grid;place-items:center}
+.pw-toggle:hover{color:var(--gold)}
+.pw-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hint{font-size:11px;color:#8f979d;margin:6px 2px 0;line-height:1.8}
+.hint.bad{color:#ff9a88}.hint.good{color:#7ee8ac}
+.meter{height:4px;border-radius:4px;background:#ffffff14;margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;border-radius:4px;background:#ff6b57;transition:width .35s var(--ease),background .3s}
+.check{display:flex!important;gap:10px;align-items:flex-start;margin-top:16px!important;font-size:12px!important;color:#c6c6c6!important;line-height:1.9;cursor:pointer}
+.check.hidden{display:none!important}
+.check input{flex:none;width:18px;height:18px;margin-top:4px;accent-color:#f5c400}
+.check a{color:var(--gold);text-decoration:underline}
+.auth-submit{width:100%;margin-top:20px;border:0;border-radius:12px;padding:14px 18px;font:inherit;font-weight:800;cursor:pointer;background:var(--gold);color:#171300;transition:background .2s,transform .2s,opacity .2s}
+.auth-submit:hover{background:var(--gold2);transform:translateY(-2px)}
+.auth-submit:disabled{opacity:.6;cursor:progress;transform:none}
+.auth-note{min-height:28px;margin-top:14px;line-height:1.9;font-size:13px;color:var(--gold);white-space:pre-line}
+.auth-note.bad{color:#ff9a88}
+.auth-small{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:13px}
+.auth-small button,.auth-small a{background:none;border:0;color:var(--gold);font:inherit;cursor:pointer;padding:0}
+.setup-alert{margin-top:16px;padding:14px 16px;border:1px solid #ffb13b80;background:#ffb13b12;border-radius:13px;color:#ffe0a8;font-size:12px;line-height:2}
+.setup-alert b{color:#fff}
+.setup-alert code{direction:ltr;unicode-bidi:isolate;background:#00000070;border-radius:6px;padding:1px 6px;font-size:11px;color:var(--gold2)}
+@media(prefers-reduced-motion:no-preference){.auth-form .field{animation:rise .5s var(--ease) both}}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.profile-grid div{padding:12px 14px;border:1px solid #ffffff14;border-radius:12px;background:#ffffff08}
+.profile-grid small{display:block;font-size:11px;color:#9da6ac}
+.profile-grid strong{font-size:15px;word-break:break-all}
+.profile-grid .wide{grid-column:1/-1}
+.profile-grid .en{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Arial,sans-serif}
+.account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.account-actions .btn{flex:1;min-width:140px}
+.account-card .status{color:#ff9a88;font-size:13px;min-height:22px}
+@media(max-width:480px){.profile-grid{grid-template-columns:1fr}}
+
+/* ---------- ریسپانسیو و دسترس‌پذیری ---------- */
+@media(max-width:650px){
+  .support-fab .fab-label{display:none}
+  .footer-links{gap:14px 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .sparks{display:none}
+}
+
+/* ---------- لوگوی جدید GoldGame ---------- */
+.brand img{width:48px;height:48px;border-radius:14px;border:1px solid #f5c40040;box-shadow:0 4px 16px #f5c40018;object-fit:cover}
+.footer-brand img{width:38px;height:38px;border-radius:11px}
+.drawer-head .brand img{width:44px;height:44px}
+.hero-logo{position:relative;width:min(290px,70vw);aspect-ratio:1;border-radius:42px;overflow:hidden;border:2px solid #f5c40060;background:#000;box-shadow:0 0 80px #f5c40035,0 25px 60px #000a}
+.hero-logo img{display:block;width:100%;height:100%;object-fit:cover}
+@media(max-width:650px){.hero-logo{width:230px;border-radius:36px}}
+@media(prefers-reduced-motion:no-preference){
+  .hero-logo{animation:logoFloat 7s ease-in-out infinite}
+  .hero-logo::after{content:'';position:absolute;inset:-30% -60%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.35) 50%,transparent 58%);transform:translateX(-80%);animation:shine 6s ease-in-out 1.2s infinite}
+}
+@keyframes logoFloat{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-14px)}}
+.launcher-symbol.logo{background:none;box-shadow:0 0 55px #f5c40030;width:130px;height:130px}
+.launcher-symbol.logo img{width:100%;height:100%;border-radius:32px;object-fit:cover;border:2px solid #f5c40060}
+
+/* آیکون‌های تصویری روبیکا و بله */
+.sc-icon.img{box-shadow:none;width:68px;height:68px;border-radius:0}
+.sc-icon.img img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 14px #0008)}
+
+/* ---------- پنجرهٔ راهنمای خرید ---------- */
+.dialog-logo-img{display:block;width:56px;height:56px;border-radius:16px;margin:4px 0 14px;border:1px solid #f5c40050}
+.buy-price{display:inline-block;margin:2px 0 10px;padding:5px 13px;border-radius:9px;background:#f5c40018;border:1px solid #f5c40055;color:var(--gold2);font-weight:800;font-size:15px}
+.buy-lead{font-size:13px!important;line-height:2!important;color:#d6dce0!important;margin:0 0 14px}
+.buy-lead b{color:#fff}
+.buy-steps{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:10px;counter-reset:s}
+.buy-steps li{counter-increment:s;position:relative;padding:12px 56px 12px 14px;border:1px solid #ffffff14;border-radius:12px;background:#ffffff07;display:grid;gap:2px}
+.buy-steps li::before{content:attr(data-n);position:absolute;right:13px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--gold);color:#171300;font-weight:900;font-size:15px}
+.buy-steps b{font-size:13px;color:#fff}
+.buy-steps em{font-style:normal;color:var(--gold2)}
+.buy-steps span{font-size:12px;color:#aeb6bb;line-height:1.9}
+.buy-tip{margin:0 0 14px;padding:11px 13px;border-radius:11px;border:1px dashed #f5c40060;background:#f5c4000a;font-size:12px;line-height:2;color:#ead98a}
