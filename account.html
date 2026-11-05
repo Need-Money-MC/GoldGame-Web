@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5c400">
+<meta name="description" content="پنل کاربری GoldGame">
+<title>حساب کاربری | GoldGame</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/extra.css">
+<script>document.documentElement.classList.add('js')</script>
+
+</head>
+<body>
+<div class="shade"></div>
+<header class="topbar">
+<a class="brand" href="index.html"><img src="assets/logo.png" alt="GoldGame"><span>GOLD<span class="gold">GAME</span></span></a>
+<button type="button" class="menu-btn" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
+<nav aria-label="منوی اصلی"><a href="index.html">خانه</a><a href="shop.html">فروشگاه</a><a href="support.html">پشتیبانی</a><a href="rules.html">قوانین</a><a href="launcher.html">دانلود لانچر</a><a class=active href="auth.html">ورود / ثبت‌نام</a></nav>
+<a class="nav-cta" href="support.html">پشتیبانی <span>←</span></a>
+</header>
+<main class="account-wrap">
+<section class="account-card">
+<span class="eyebrow"><i></i> پنل کاربری</span>
+<h1>حساب <span class="gold">GoldGame</span></h1>
+<p id="account-info">در حال بررسی وضعیت ورود…</p>
+<div id="account-profile"></div>
+<div class="account-actions" id="account-actions"></div>
+<p class="status" id="account-status" role="status"></p>
+</section>
+</main>
+<footer>
+<a class="brand footer-brand" href="index.html"><img src="assets/logo.png" alt=""><span>GOLD<span class="gold">GAME</span></span></a>
+<p>یک ماجراجویی تازه، یک جامعه تازه.</p>
+
+<small>© GoldGame — تمام حقوق محفوظ است.</small>
+</footer>
+<a class="support-fab" href="support.html" aria-label="رفتن به بخش پشتیبانی" title="پشتیبانی GoldGame"><span class="fab-label">پشتیبانی</span><i class="fab-dot"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.6"/><rect x="17" y="13" width="4" height="6" rx="1.6"/><path d="M19 19v.5a2.5 2.5 0 0 1-2.5 2.5H13"/></svg></a>
+<div class="toast" role="status"></div>
+<script src="assets/app.js"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/gg-auth.js"></script>
+<script>
+(async () => {
+  const info = document.getElementById('account-info'), prof = document.getElementById('account-profile'),
+        actions = document.getElementById('account-actions'), status = document.getElementById('account-status');
+  const el = (t, cls, txt) => { const n = document.createElement(t); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+  const cell = (label, value, cls, en) => { const d = el('div', cls); d.appendChild(el('small', '', label)); d.appendChild(el('strong', en ? 'en' : '', value)); return d; };
+  const loginLink = () => { actions.replaceChildren(); const a = el('a', 'btn primary', 'ورود / ثبت‌نام'); a.href = 'auth.html'; actions.appendChild(a); };
+  try {
+    const client = await GG.getClient();
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) { info.textContent = 'برای دیدن پنل کاربری ابتدا وارد حساب شو.'; loginLink(); return; }
+    const user = session.user;
+    let profile = null;
+    try { const r = await client.from('profiles').select('username,rank,created_at').eq('id', user.id).maybeSingle(); profile = r.data; } catch (_) {}
+    const uname = (profile && profile.username) || (user.user_metadata && user.user_metadata.username) || user.email;
+    info.textContent = 'خوش اومدی، ' + uname + '!';
+    const grid = el('div', 'profile-grid');
+    grid.appendChild(cell('نام کاربری (داخل بازی)', uname, '', true));
+    grid.appendChild(cell('رنک', (profile && profile.rank) || 'Member', '', true));
+    grid.appendChild(cell('ایمیل', user.email, 'wide', true));
+    const since = new Date((profile && profile.created_at) || user.created_at);
+    grid.appendChild(cell('تاریخ عضویت', since.toLocaleDateString('fa-IR'), 'wide'));
+    prof.replaceChildren(grid);
+    actions.replaceChildren();
+    const shop = el('a', 'btn primary', 'فروشگاه'); shop.href = 'shop.html';
+    const sup = el('a', 'btn secondary', 'پشتیبانی'); sup.href = 'support.html';
+    const out = el('button', 'btn secondary', 'خروج از حساب'); out.type = 'button';
+    out.onclick = async () => { out.disabled = true; const { error } = await client.auth.signOut(); if (error) { status.textContent = 'خروج ناموفق بود: ' + GG.fa(error); out.disabled = false; } else location.href = 'index.html'; };
+    actions.append(shop, sup, out);
+  } catch (err) {
+    info.textContent = GG.fa(err);
+    if (err && err.setup) info.textContent += ' صفحهٔ ورود، راهنمای کامل را نشان می‌دهد.';
+    loginLink();
+  }
+})();
+</script>
+</body>
+</html>
