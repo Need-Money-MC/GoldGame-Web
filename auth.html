@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5c400">
+<meta name="description" content="ورود یا ساخت حساب GoldGame">
+<title>ورود و ثبت‌نام | GoldGame</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/extra.css">
+<script>document.documentElement.classList.add('js')</script>
+
+</head>
+<body>
+<div class="shade"></div>
+<header class="topbar">
+<a class="brand" href="index.html"><img src="assets/logo.png" alt="GoldGame"><span>GOLD<span class="gold">GAME</span></span></a>
+<button type="button" class="menu-btn" aria-label="باز کردن منو"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg></button>
+<nav aria-label="منوی اصلی"><a href="index.html">خانه</a><a href="shop.html">فروشگاه</a><a href="support.html">پشتیبانی</a><a href="rules.html">قوانین</a><a href="launcher.html">دانلود لانچر</a><a class=active href="auth.html">ورود / ثبت‌نام</a></nav>
+<a class="nav-cta" href="support.html">پشتیبانی <span>←</span></a>
+</header>
+<main class="auth-wrap">
+<section class="auth-card">
+<span class="eyebrow"><i></i> حساب کاربری GoldGame</span><span class="db-status wait" id="db-status"><i></i><b>در حال بررسی دیتابیس…</b></span>
+<h1 id="auth-title">ورود به حساب</h1>
+<p id="auth-description">برای مدیریت حساب کاربری، با ایمیل و رمز عبورت وارد شو.</p>
+<div class="auth-tabs" id="auth-tabs" data-mode="login"><span class="pill"></span><button type="button" id="show-login" class="active">ورود</button><button type="button" id="show-signup">ثبت‌نام</button></div>
+<form id="auth-form" class="auth-form" novalidate>
+<div id="user-row" class="field hidden"><label for="username">نام کاربری (نام داخل ماینکرفت)</label><input id="username" class="ltr" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="16" placeholder="GoldPlayer"><div class="hint" id="username-hint">۳ تا ۱۶ حرف انگلیسی، عدد یا _</div></div>
+<div class="field"><label for="email">ایمیل</label><input id="email" class="ltr" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="254" placeholder="you@example.com"></div>
+<div class="field"><label for="password">رمز عبور</label><div class="pw-wrap"><input id="password" class="ltr" type="password" autocomplete="current-password" maxlength="128" placeholder="حداقل ۸ کاراکتر"><button type="button" class="pw-toggle" id="pw-toggle" aria-label="نمایش رمز عبور"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.500-7 10-7 10 7 10 7-3.500 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="meter hidden" id="meter"><i></i></div></div>
+<div id="confirm-row" class="field hidden"><label for="password2">تکرار رمز عبور</label><input id="password2" class="ltr" type="password" autocomplete="new-password" maxlength="128" placeholder="رمز را دوباره وارد کن"></div>
+<label id="terms-row" class="check hidden"><input type="checkbox" id="terms"><span>قوانین <a href="rules.html" target="_blank" rel="noopener">GoldGame</a> را خوانده‌ام و می‌پذیرم.</span></label>
+<button class="auth-submit" id="submit-button" type="submit">ورود</button>
+</form>
+<div class="auth-small"><button type="button" id="forgot-button">فراموشی رمز عبور</button><a href="index.html">بازگشت به خانه ←</a></div>
+<div id="auth-message" class="auth-note" role="status" aria-live="polite"></div>
+<div id="setup-alert" class="setup-alert hidden"></div>
+</section>
+</main>
+<footer>
+<a class="brand footer-brand" href="index.html"><img src="assets/logo.png" alt=""><span>GOLD<span class="gold">GAME</span></span></a>
+<p>یک ماجراجویی تازه، یک جامعه تازه.</p>
+
+<small>© GoldGame — تمام حقوق محفوظ است.</small>
+</footer>
+<a class="support-fab" href="support.html" aria-label="رفتن به بخش پشتیبانی" title="پشتیبانی GoldGame"><span class="fab-label">پشتیبانی</span><i class="fab-dot"></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.6"/><rect x="17" y="13" width="4" height="6" rx="1.6"/><path d="M19 19v.5a2.5 2.5 0 0 1-2.5 2.5H13"/></svg></a>
+<div class="toast" role="status"></div>
+<script src="assets/app.js"></script>
+<script src="assets/supabase-config.js"></script>
+<script src="assets/gg-auth.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const msg = $('auth-message'), form = $('auth-form'), tabs = $('auth-tabs');
+  let mode = 'login';
+  const say = (t, bad) => { msg.textContent = t || ''; msg.classList.toggle('bad', !!bad); };
+  const redirect = file => new URL(file, location.href).href;
+
+  /* وضعیت دیتابیس + راهنمای تنظیم */
+  const badge = $('db-status');
+  function setBadge(cls, text) { badge.className = 'db-status ' + cls; badge.querySelector('b').textContent = text; }
+  const state = GG.configState();
+  if (!state.ok) {
+    setBadge('bad', 'دیتابیس تنظیم نشده');
+    const box = $('setup-alert');
+    box.innerHTML = '<b>' + state.problem + '</b><br>فایل <code>assets/supabase-config.js</code> را باز کن و مقدار <code>GOLDGAME_SUPABASE_URL</code> و <code>GOLDGAME_SUPABASE_ANON_KEY</code> را از پنل Supabase (Project Settings ← API) بگذار، بعد فایل را دوباره روی GitHub آپلود کن.';
+    box.classList.remove('hidden');
+  } else {
+    GG.ping().then(r => r.ok ? setBadge('ok', 'دیتابیس متصل') : (setBadge('bad', 'دیتابیس در دسترس نیست'), say(r.reason, true)));
+  }
+
+  /* حالت ورود / ثبت‌نام */
+  function setMode(next) {
+    mode = next; const su = mode === 'signup';
+    tabs.dataset.mode = mode;
+    $('show-login').classList.toggle('active', !su); $('show-signup').classList.toggle('active', su);
+    ['user-row', 'confirm-row', 'terms-row', 'meter'].forEach(id => $(id).classList.toggle('hidden', !su));
+    $('auth-title').textContent = su ? 'ساخت حساب GoldGame' : 'ورود به حساب';
+    $('auth-description').textContent = su ? 'نام داخل بازی، ایمیل و رمز عبورت را وارد کن تا حسابت ساخته شود.' : 'برای مدیریت حساب کاربری، با ایمیل و رمز عبورت وارد شو.';
+    $('submit-button').textContent = su ? 'ساخت حساب' : 'ورود';
+    $('password').autocomplete = su ? 'new-password' : 'current-password';
+    $('forgot-button').classList.toggle('hidden', su);
+    say('');
+  }
+  $('show-login').onclick = () => setMode('login');
+  $('show-signup').onclick = () => setMode('signup');
+
+  /* نمایش/مخفی کردن رمز */
+  $('pw-toggle').onclick = () => {
+    const p = $('password'), show = p.type === 'password';
+    p.type = show ? 'text' : 'password'; $('password2').type = p.type;
+    $('pw-toggle').setAttribute('aria-label', show ? 'پنهان کردن رمز عبور' : 'نمایش رمز عبور');
+  };
+
+  /* راهنمای لحظه‌ای نام کاربری و قدرت رمز */
+  $('username').addEventListener('input', () => {
+    const v = $('username').value.trim(), h = $('username-hint');
+    if (!v) { h.className = 'hint'; h.textContent = '۳ تا ۱۶ حرف انگلیسی، عدد یا _'; $('username').classList.remove('bad'); return; }
+    const ok = GG.USER_RE.test(v);
+    h.className = 'hint ' + (ok ? 'good' : 'bad');
+    h.textContent = ok ? 'نام کاربری معتبر است' : 'فقط حرف انگلیسی، عدد و _ (۳ تا ۱۶ کاراکتر)';
+    $('username').classList.toggle('bad', !ok);
+  });
+  $('password').addEventListener('input', () => {
+    const v = $('password').value; let s = 0;
+    if (v.length >= 8) s++; if (v.length >= 12) s++;
+    if (/[a-z]/i.test(v) && /\d/.test(v)) s++; if (/[^a-z0-9]/i.test(v)) s++;
+    const bar = $('meter').firstElementChild;
+    bar.style.width = (v ? Math.max(12, s * 25) : 0) + '%';
+    bar.style.background = s <= 1 ? '#ff6b57' : s === 2 ? '#ffb13b' : '#62e69b';
+  });
+
+  /* ارسال فرم */
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); say('');
+    const email = $('email').value.trim(), password = $('password').value, username = $('username').value.trim();
+    if (!/^\S+@\S+\.\S+$/.test(email)) { say('ایمیل را درست وارد کن.', true); $('email').focus(); return; }
+    if (password.length < 8) { say('رمز عبور باید حداقل ۸ کاراکتر باشد.', true); $('password').focus(); return; }
+    if (mode === 'signup') {
+      if (!GG.USER_RE.test(username)) { say('نام کاربری باید ۳ تا ۱۶ حرف انگلیسی، عدد یا _ باشد.', true); $('username').focus(); return; }
+      if (password !== $('password2').value) { say('رمز عبور و تکرار آن یکسان نیستند.', true); $('password2').focus(); return; }
+      if (!$('terms').checked) { say('برای ساخت حساب باید قوانین را بپذیری.', true); return; }
+    }
+    const btn = $('submit-button'); btn.disabled = true; say('در حال انجام درخواست…');
+    try {
+      const client = await GG.getClient();
+      if (mode === 'signup') {
+        const chk = await client.rpc('username_available', { name: username });
+        if (!chk.error && chk.data === false) { say('این نام کاربری قبلاً گرفته شده؛ یکی دیگر انتخاب کن.', true); return; }
+        const { data, error } = await client.auth.signUp({ email, password, options: { data: { username }, emailRedirectTo: redirect('account.html') } });
+        if (error) throw error;
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) { say('با این ایمیل قبلاً حساب ساخته شده. وارد شو یا رمز را بازیابی کن.', true); return; }
+        if (data.session) { say('حساب ساخته شد! در حال انتقال…'); location.href = 'account.html'; }
+        else say('حساب ساخته شد ✅\nلینک تأیید برای ایمیلت ارسال شد؛ صندوق ورودی (و اسپم) را بررسی کن، بعد وارد شو.');
+      } else {
+        const { error } = await client.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        location.href = 'account.html';
+      }
+    } catch (err) { say(GG.fa(err), true); }
+    finally { btn.disabled = false; }
+  });
+
+  /* فراموشی رمز */
+  $('forgot-button').addEventListener('click', async () => {
+    const email = $('email').value.trim();
+    if (!email) { say('اول ایمیلت را در کادر ایمیل وارد کن.', true); $('email').focus(); return; }
+    say('در حال ارسال لینک بازیابی…');
+    try {
+      const client = await GG.getClient();
+      const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: redirect('reset-password.html') });
+      if (error) throw error;
+      say('اگر این ایمیل ثبت شده باشد، لینک بازیابی برایش ارسال می‌شود.');
+    } catch (err) { say(GG.fa(err), true); }
+  });
+  setMode(location.hash === '#signup' ? 'signup' : 'login');
+})();
+</script>
+</body>
+</html>
